@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod # Used to make abstract classes
 
 class DataOutput(ABC):
     '''Abstract base class for weather data output.'''
