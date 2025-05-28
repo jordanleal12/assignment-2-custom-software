@@ -1,3 +1,5 @@
+""" Converts raw unix timestamp to local timezone aware datetime """
+
 from datetime import datetime # Used to format the date and time
 import pytz # Used to handle timezone conversions
 from timezonefinder import TimezoneFinder # Used to find timezone based on latitude and longitude
@@ -20,4 +22,3 @@ def convert_time(unix_dt: int, coords: dict) -> str:
     local_dt = utc_dt.astimezone(local_tz)
     # Return formatted local datetime as a string
     return local_dt.strftime("%d-%b-%y %I:%M %p %Z")
-
