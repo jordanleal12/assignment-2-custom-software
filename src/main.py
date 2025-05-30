@@ -52,7 +52,7 @@ def main():
 
     if not api_key:
         print("Error: Missing API key in .env file")
-        return
+        exit()
 
     service = WeatherService(api_key)
     handler = get_output_handler()
@@ -73,7 +73,7 @@ def main():
                         handler.output(weather_data)
                         print("Data saved successfully!")
                 except Exception as e:
-                    print(f"Error: {str(e)}")
+                    print(f"Error: {e}")
 
 if __name__ == "__main__":
-    main() # Checks if the script is being run from main before calling 
+    main() # Checks if the script is being run from main before calling

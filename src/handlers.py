@@ -2,7 +2,6 @@
 
 import json
 from abc import ABC, abstractmethod
-# import os
 import csv
 
 class DataOutput(ABC):

@@ -26,30 +26,30 @@ class WeatherService:
         response = None  # Initialize response to None
         try:
             # Send web request to OpenWeatherMap API with above parameters
-            response = requests.get(self.url, params=owm_queries, timeout=10) 
+            response = requests.get(self.url, params=owm_queries, timeout=10)
             # Returns a HTTP error if the request was unsuccessful, returns nothing otherwise
             response.raise_for_status()
 
         # Prints relevant error message if the request was unsuccessful
-        except requests.exceptions.Timeout:
+        except requests.ConnectionError:
+            print("Error: Unable to connect to the OpenWeatherMap API")
+            return {}
+        except requests.Timeout:
             print("Error: Request timed out (10 seconds)")
             return {}
-        except requests.exceptions.HTTPError as e:
-            print(f"API Error: {e.response.status_code} - {e.response.reason}")
+        except requests.HTTPError as e:
+            print(f"HTTP Error: {e.response.status_code} - {e.response.reason}")
             return {}
-        except requests.exceptions.RequestException as e:
-            print(f"Network Error: {str(e)}")
+        except requests.RequestException as e: # Catch all other request-related errors
+            print(f"Network Error: {e}")
             return {}
         except KeyError as e:
             print(f"Data Error: Missing expected field {e}")
             return {}
-        except Exception as e:
-            print(f"Unexpected Error: {str(e)}")
-            return {}
-
+        
         if response:  # Check if response is not None before accessing it
             data = response.json() # Assign response data to a variable
-            # Return dictionary from json variable 
+            # Return dictionary from json variable
             return {
                 "city": data["name"],  # City name
                 "temperature": data["main"]["temp"],  # Temperature in Celsius
