@@ -8,14 +8,22 @@ from weather_service import WeatherService
 # Add output selection
 def get_output_handler():
     """Prompts user to select output format and returns the corresponding handler."""
-    
+
+    print(f"""
+    Welcome to the Weather Application!
+    This app fetches current weather, date and time from any Capital City in the world!
+    You can choose to output to terminal, a CSV file, or a JSON file.
+    Please note - You can choose non-capital cities, but the data may not be accurate.
+    {'_' * 50}""")
+
     while True:
         choice = input("""
-                   Choose output format:
-                   1. Terminal
-                   2. CSV File
-                   3. JSON File
-                   Enter choice (1-3): 
+                Choose output format:
+                1. Terminal
+                2. CSV File
+                3. JSON File
+                4. Exit
+                Enter choice (1-3): 
                    """).strip()
         match choice: # Matches user input to select output and returns error if invalid
             case '1':
@@ -30,8 +38,11 @@ def get_output_handler():
                     "Enter JSON filename (default: weather_data.json): "
                     ) or 'weather_data.json'
                 return JSONOutput(filename)
+            case '4':
+                print("Exiting the application. Goodbye!")
+                exit()  # Exit the application
             case _:
-                print("\nInvalid choice, please enter 1, 2, or 3.")
+                print("\nInvalid choice, please enter 1, 2, 3 or 4.")
 
 # Modify main loop
 def main():
@@ -44,19 +55,25 @@ def main():
         return
 
     service = WeatherService(api_key)
-    handler = get_output_handler()  # Updated
+    handler = get_output_handler()
 
     while True:
-        city = input("\nEnter city name (or 'exit'): ")
-        if city.lower() == "exit":
-            break
+        city = input("\nEnter city name, 'exit' or 'return' to re-select output: ").lower().strip()
+        match city:
+            case "exit":
+                exit()
+            case "return":
+                handler = get_output_handler()
+            case "":
+                print("City name cannot be empty. Please try again.")
+            case _:
+                try:
+                    weather_data = service.get_weather_data(city)
+                    if weather_data:
+                        handler.output(weather_data)
+                        print("Data saved successfully!")
+                except Exception as e:
+                    print(f"Error: {str(e)}")
 
-        try:
-            weather_data = service.get_weather_data(city)
-            if weather_data:
-                handler.output(weather_data)
-                print("Data saved successfully!")
-        except Exception as e:
-            print(f"Error: {str(e)}")
-
-main()
+if __name__ == "__main__":
+    main() # Checks if the script is being run from main before calling 

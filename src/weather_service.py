@@ -1,5 +1,7 @@
+"""Define a class to pull weather data from API, convert to dictionary, and handle errors."""
+
 import requests # Used to make HTTP requests
-from dt_conversion import convert_time  # Importing the convert_time function from dt_conversion module
+from dt_conversion import convert_time  # Import convert_time function from dt_conversion module
 
 class WeatherService:
     '''Class to pull weather data from a weather API.'''
@@ -11,7 +13,7 @@ class WeatherService:
 
     def get_weather_data(self, city=str) -> dict:
         '''Fetch weather data from the API for the specified city.'''
-        
+
         # Provides the parameters for OpenWeatherMap API request
         owm_queries = {
             "q": city,  # City name
@@ -29,10 +31,23 @@ class WeatherService:
             response.raise_for_status()
 
         # Prints relevant error message if the request was unsuccessful
+        except requests.exceptions.Timeout:
+            print("Error: Request timed out (10 seconds)")
+            return {}
+        except requests.exceptions.HTTPError as e:
+            print(f"API Error: {e.response.status_code} - {e.response.reason}")
+            return {}
         except requests.exceptions.RequestException as e:
-            print(f"Error fetching weather data: {e}")
-        
-        if response is not None:  # Check if response is not None before accessing it
+            print(f"Network Error: {str(e)}")
+            return {}
+        except KeyError as e:
+            print(f"Data Error: Missing expected field {e}")
+            return {}
+        except Exception as e:
+            print(f"Unexpected Error: {str(e)}")
+            return {}
+
+        if response:  # Check if response is not None before accessing it
             data = response.json() # Assign response data to a variable
             # Return dictionary from json variable 
             return {
@@ -40,6 +55,6 @@ class WeatherService:
                 "temperature": data["main"]["temp"],  # Temperature in Celsius
                 "humidity": data["main"]["humidity"],  # Humidity percentage
                 "condition": data["weather"][0]["description"],  # Weather description
-                "current_time": convert_time(data["dt"], data["coord"])  # Current time in the city's timezone
+                "current_time": convert_time(data["dt"], data["coord"])  # Current local time
             }
         return {}  # Return an empty dictionary if response is None
