@@ -41,11 +41,15 @@ class CSVOutput(DataOutput):
         """Save one weather report at a time"""
 
         # Creating and writing to the CSV file
-        with open(self.filename, "w", newline="", encoding="utf-8") as f:
-            # Create CSV writer with weather data keys as headers
-            w = csv.DictWriter(f, fieldnames=weather_data.keys())
-            w.writeheader() # Write the header row with the keys
-            w.writerow(weather_data) # Write the weather data as a row in the CSV file
+        try:
+            with open(self.filename, "w", newline="", encoding="utf-8") as f:
+                # Create CSV writer with weather data keys as headers
+                w = csv.DictWriter(f, fieldnames=weather_data.keys())
+                w.writeheader() # Write the header row with the keys
+                w.writerow(weather_data) # Write the weather data as a row in the CSV file
+                print(f"Weather data written to {self.filename}")
+        except IOError as e: # Handle file writing errors such as permission or disk space issues
+            print(f"Error writing to CSV file: {e}")
 
 class JSONOutput(DataOutput):
     """Outputs the weather data to a JSON file."""
@@ -56,5 +60,9 @@ class JSONOutput(DataOutput):
 
     def output(self, weather_data: dict) -> json:
         # Converts the weather data dictionary to JSON format and writes it to a file.
-        with open(self.filename, "w", encoding="utf-8") as f:
-            json.dump(weather_data, f, indent=4)
+        try:
+            with open(self.filename, "w", encoding="utf-8") as f:
+                json.dump(weather_data, f, indent=4)
+                print(f"Weather data written to {self.filename}")
+        except IOError as e:  # Handle file writing errors such as permission or disk space issues
+            print(f"Error writing to JSON file: {e}")
