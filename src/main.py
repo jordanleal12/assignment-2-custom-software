@@ -25,6 +25,7 @@ def get_output_handler():
     This app fetches current weather, date and time from any Capital City in the world!
     You can choose to output to terminal, a CSV file, or a JSON file.
     Please note - You can choose non-capital cities, but the data may not be accurate.
+    Cities with multiple words should be separated by or spaces, or use the first word.
     {'_' * 50}""")
 
     while True:
@@ -71,7 +72,10 @@ def main():
     handler = get_output_handler()
 
     while True:
-        city = input("\nEnter city name, 'exit' or 'return' to re-select output: ").lower().strip()
+        city = input("""
+        Enter city name for weather report, 
+        'exit' to close the application, or 
+        'return' to change output/file name: """).lower().strip()
         match city:
             case "exit":
                 exit()
@@ -82,8 +86,10 @@ def main():
             case _:
                 try:
                     # Check if the city name contains only alphabetic characters
-                    if not city.isalpha():
-                        raise ValueError("City name must be letters only")
+                    for char in city:
+                        if not char.isalpha() and char not in (" ", ","):
+                            raise ValueError("City name must contain letters, spaces or commas only")
+                    city = city.replace(" ", ",")  # Replace spaces with commas for city names with multiple words
                     weather_data = service.get_weather_data(city)
                     # Check if weather data is not empty
                     if weather_data:
