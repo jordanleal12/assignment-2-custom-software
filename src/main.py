@@ -5,6 +5,17 @@ from dotenv import load_dotenv
 from handlers import TerminalOutput, CSVOutput, JSONOutput
 from weather_service import WeatherService
 
+def extension_checker(filename: str, f_type: str) -> str:
+    """Checks the file extension and returns the filename with the correct extension."""
+    ext = os.path.splitext(filename)[1].lower()
+    if ext and ext != f_type:
+        print(f"Invalid file extension, converting to {f_type}")
+        filename = filename.replace(ext, f_type)
+    if not ext:
+        print(f"Missing file extension, adding {f_type}")
+        filename += f_type
+    return filename
+
 # Add output selection
 def get_output_handler():
     """Prompts user to select output format and returns the corresponding handler."""
@@ -31,12 +42,14 @@ def get_output_handler():
             case '2':
                 filename = input(
                     "Enter CSV filename (default: weather_data.csv): "
-                    ) or 'weather_data.csv'
+                    ) or "weather_data.csv"
+                filename = extension_checker(filename, ".csv") # Check and correct file extension
                 return CSVOutput(filename)
             case '3':
                 filename = input(
                     "Enter JSON filename (default: weather_data.json): "
                     ) or 'weather_data.json'
+                filename = extension_checker(filename, ".json") # Check and correct file extension
                 return JSONOutput(filename)
             case '4':
                 print("Exiting the application. Goodbye!")
@@ -68,10 +81,15 @@ def main():
                 print("City name cannot be empty. Please try again.")
             case _:
                 try:
+                    # Check if the city name contains only alphabetic characters
+                    if not city.isalpha():
+                        raise ValueError("City name must be letters only")
                     weather_data = service.get_weather_data(city)
+                    # Check if weather data is not empty
                     if weather_data:
                         handler.output(weather_data)
-                        print("Data saved successfully!")
+                    else:
+                        raise ValueError("No data found for the specified city.")
                 except Exception as e:
                     print(f"Error: {e}")
 

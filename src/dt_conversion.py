@@ -7,10 +7,20 @@ from timezonefinder import TimezoneFinder # Used to find timezone based on latit
 def get_timezone(coords: dict) -> str:
     '''Get the timezone name based on latitude and longitude.'''
     # Create a TimezoneFinder instance
-    tf = TimezoneFinder()
-    # Get the timezone name from latitude and longitude
-    timezone_name = tf.timezone_at(lat=coords["lat"], lng=coords["lon"])
-    return timezone_name
+    try:
+        # Check if the coordinates dictionary contains 'lat' and 'lon' keys
+        if "lat" not in coords or "lon" not in coords:
+            raise ValueError("Coordinates must contain 'lat' and 'lon' keys.")
+        # Get the timezone name from latitude and longitude
+        timezone_name = TimezoneFinder().timezone_at(lat=coords["lat"], lng=coords["lon"])
+        # If timezone isn't found, raise an error as timezone_name will be None
+        if not timezone_name:
+            raise ValueError("Coordinates do not correspond to a valid timezone.")
+        return timezone_name
+    except ValueError as e:
+        # Handle any exceptions that occur during timezone lookup, revert to UTC
+        print(f"Error getting timezone: {e}, reverting to UTC.")
+        return "UTC"
 
 def convert_time(unix_dt: int, coords: dict) -> str:
     '''Convert Unix timestamp to local time in the specified timezone.'''
