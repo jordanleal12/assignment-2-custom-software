@@ -1,6 +1,6 @@
 # CLI Weather Application - Fetch Current Weather
 
-## Overview:
+## Overview
 
 This is a python command line application that gives you current weather data for any capital city in the world!
 
@@ -10,7 +10,7 @@ Non-capital cities also work, but functionality is only guaranteed for capital c
 
 Users can choose to output the weather report to the terminal, CSV or JSON!
 
-## Features:
+## Features
 
 - Real time (within 10 minutes) weather data from any capital city
 - Multiple output formats (terminal, JSON, CSV)
@@ -18,18 +18,18 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
 - Simple and easy to use interface with robust error checking
 - Easy to set up and install process
 
-## Requirements:
+## Requirements
 
 - Python 3.10+ (3.12.3 recommended)
 - PIP (python package installer)
 - OpenWeatherMap API Key (free, instructions provided in install section)
 
-## Installation:
+## Installation
 
 - [Linux/WSL/Mac](#linuxwslmac)
 - [Windows](#windows)
 
-### Linux/WSL/Mac -
+### Linux/WSL/Mac
 
 1. Verify version
 
@@ -61,7 +61,7 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
 
 5. Add OpenWeatherMap API key
 
-   - Visit [OpenWeatherMap](https://home.openweathermap.org/users/sign_up) sign up page and create accoount
+   - Visit [OpenWeatherMap](https://home.openweathermap.org/users/sign_up) sign up page and create account
    - Copy API key from [API keys](https://home.openweathermap.org/api_keys) page on OpenWeatherMap
    - Create a file named .env in the project root and save your API key
 
@@ -82,7 +82,7 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
    deactivate
    ```
 
-### Windows -
+### Windows
 
 1. Verify version
 
@@ -114,7 +114,7 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
 
 5. Add OpenWeatherMap API key
 
-   - Visit [OpenWeatherMap](https://home.openweathermap.org/users/sign_up) sign up page and create accoount
+   - Visit [OpenWeatherMap](https://home.openweathermap.org/users/sign_up) sign up page and create account
    - Copy API key from [API keys](https://home.openweathermap.org/api_keys) page on OpenWeatherMap
    - Create a file named .env in the project root and save your API key
 
@@ -135,7 +135,7 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
    deactivate
    ```
 
-## Using the Weather App:
+## Using the Weather App
 
 1. From the main menu, type:
    - '1' To output the weather report to the CLI
@@ -151,7 +151,7 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
    - 'Return' to re-select output or specify new file name to write to
    - 'Exit' to exit the application
 
-## Additional Information:
+## Additional Information
 
 - City names with multiple names (i.e. Buenos Aires) can be input as comma separated, space separated or using the first word only
 - The datetime received is the local time in the selected city from the last weather update.
@@ -163,7 +163,7 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
 
   If the incorrect extension is used, it will be replaced with the correct extension. If extension name is missing, it will be added.
 
-## External Libraries:
+## External Libraries
 
 - Requests - Used for fetching data from the API
 - Python-dotenv - Used for managing the API key
