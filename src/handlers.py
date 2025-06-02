@@ -1,8 +1,8 @@
 """ This module defines classes for outputting weather data to terminal, CSV, and JSON."""
 
-import json
-from abc import ABC, abstractmethod
-import csv
+import json # Used to handle JSON data
+from abc import ABC, abstractmethod # Creates abstract base classes for structure and method definitions
+import csv # Used to handle CSV data
 
 class DataOutput(ABC):
     """Abstract base class for weather data output."""
@@ -22,12 +22,13 @@ class TerminalOutput(DataOutput):
     def output(self, weather_data: dict) -> str:
         """Print the weather data to the terminal."""
 
-        print(f"""Weather Data:
+        print(f"""
+            Weather Data:
             Location: {weather_data["city"]}
             Temperature: {weather_data["temperature"]}°C
             Humidity: {weather_data["humidity"]}%
             Condition: {weather_data["condition"]}
-            Current Time: {weather_data["current_time"]}
+            Local Time: {weather_data["local_time"]}
             {"-" * 20}""")
 
 class CSVOutput(DataOutput):
@@ -38,16 +39,15 @@ class CSVOutput(DataOutput):
         super().__init__(filename)
 
     def output(self, weather_data: dict) -> csv:
-        """Save one weather report at a time"""
+        """Creates and writes the CSV file with error checking."""
 
-        # Creating and writing to the CSV file
-        try:
+        try: # Try to open the file for writing
             with open(self.filename, "w", newline="", encoding="utf-8") as f:
                 # Create CSV writer with weather data keys as headers
                 w = csv.DictWriter(f, fieldnames=weather_data.keys())
                 w.writeheader() # Write the header row with the keys
                 w.writerow(weather_data) # Write the weather data as a row in the CSV file
-                print(f"Weather data written to {self.filename}")
+                print(f"Weather data written to {self.filename}") # Print success message
         except IOError as e: # Handle file writing errors such as permission or disk space issues
             print(f"Error writing to CSV file: {e}")
 
@@ -59,10 +59,11 @@ class JSONOutput(DataOutput):
         super().__init__(filename)
 
     def output(self, weather_data: dict) -> json:
-        # Converts the weather data dictionary to JSON format and writes it to a file.
-        try:
+        """Creates and writes the JSON file with error checking."""
+
+        try: # Try to open the file for writing
             with open(self.filename, "w", encoding="utf-8") as f:
-                json.dump(weather_data, f, indent=4)
-                print(f"Weather data written to {self.filename}")
+                json.dump(weather_data, f, indent=4) # Write to JSON with indentation
+                print(f"Weather data written to {self.filename}") # Print success message
         except IOError as e:  # Handle file writing errors such as permission or disk space issues
             print(f"Error writing to JSON file: {e}")
