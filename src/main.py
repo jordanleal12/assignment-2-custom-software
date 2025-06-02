@@ -20,7 +20,7 @@ def extension_checker(filename: str, f_type: str) -> str:
 def get_output_handler():
     """Prompts user to select output format and returns the corresponding handler."""
 
-    print(f"""
+    print(f"""  
     Welcome to the Weather Application!
     This app fetches current weather, date and time from any Capital City in the world!
     You can choose to output to terminal, a CSV file, or a JSON file.
