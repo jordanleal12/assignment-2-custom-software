@@ -66,8 +66,9 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
    - Create a file named .env in the project root and save your API key
 
    ```bash
-   echo 'OWM_API_KEY=api-key-here' > .env
+   echo "OWM_API_KEY = \"api-key-here\"" > .env
    # Replace api-key-here with the API key
+   # MAKE SURE TO INCLUDE ESCAPED QUOTATION MARKS FOR API KEY!!!
    ```
 
 6. Run application!
@@ -119,8 +120,9 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
    - Create a file named .env in the project root and save your API key
 
    ```cmd
-   echo OWM_API_KEY=api-key-here > .env
-   # Replace api-key-here with the API key
+   echo OWM_API_KEY = "api-key-here" > .env
+   REM - Replace api-key-here with the API key
+   REM - ENSURE API KEY IS IN QUOTATION MARKS
    ```
 
 6. Run application!

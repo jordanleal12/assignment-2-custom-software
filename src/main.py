@@ -36,7 +36,7 @@ def get_output_handler():
                 2. CSV File
                 3. JSON File
                 4. Exit
-                Enter choice (1-3): 
+                Enter choice (1-4): 
                 """).strip()
         match choice: # Matches user input to select output and returns error if invalid
             case "1":
