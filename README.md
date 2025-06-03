@@ -23,6 +23,8 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
 - Python 3.10+ (3.12.3 recommended)
 - PIP (python package installer)
 - OpenWeatherMap API Key (free, instructions provided in install section)
+- Windows, Linux or MacOS
+- Active internet connection
 
 ## Installation
 
@@ -64,6 +66,8 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
    - Visit [OpenWeatherMap](https://home.openweathermap.org/users/sign_up) sign up page and create account
    - Copy API key from [API keys](https://home.openweathermap.org/api_keys) page on OpenWeatherMap
    - Create a file named .env in the project root and save your API key
+   - Verify email address used with confirmation email - API KEY WILL NOT WORK IF YOU SKIP THIS STEP!!!
+   - For ease of use, the following pre-confirmed API key can be used - "0c3330fa568c970e539a75c0d5c08c40"
 
    ```bash
    echo "OWM_API_KEY = \"api-key-here\"" > .env
@@ -118,6 +122,8 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
    - Visit [OpenWeatherMap](https://home.openweathermap.org/users/sign_up) sign up page and create account
    - Copy API key from [API keys](https://home.openweathermap.org/api_keys) page on OpenWeatherMap
    - Create a file named .env in the project root and save your API key
+   - Verify email address used with confirmation email - API KEY WILL NOT WORK IF YOU SKIP THIS STEP!!!
+   - For ease of use, the following pre-confirmed API key can be used - "0c3330fa568c970e539a75c0d5c08c40"
 
    ```cmd
    echo OWM_API_KEY = "api-key-here" > .env
@@ -165,9 +171,44 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
 
   If the incorrect extension is used, it will be replaced with the correct extension. If extension name is missing, it will be added.
 
-## External Libraries
+## Files
 
-- Requests - Used for fetching data from the API
-- Python-dotenv - Used for managing the API key
-- Pytz - Used to convert timezones to local timezone
-- Timezonefinder - Converts city coordinates to timezone suffix
+|     **Files**      |                                   **Purpose**                                   |
+| :----------------: | :-----------------------------------------------------------------------------: |
+|        .env        |      Stores API key as environmental variable for accessing OpenWeatherMap      |
+|      main.py       |             Entry point for application, executes main app function             |
+|    handlers.py     |             Contains logic for outputting to terminal, CSV or JSON              |
+| weather_service.py |     Communicates with OpenWeatherMap API to retrieve requested weather data     |
+|  dt_conversion.py  | Contains logic for converting the weather data datetime to local aware datetime |
+
+## External Libraries/Packages
+
+| **Package/Library** | **Version** |                         **License**                         |                     **Purpose**                     |
+| :-----------------: | :---------: | :---------------------------------------------------------: | :-------------------------------------------------: |
+|       certifi       |  2025.4.26  |      [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/)      |            SSL certificate verification             |
+|        cffi         |   1.17.1    |          [MIT](https://opensource.org/license/MIT)          |          Foreign function interface for C           |
+| charset-normalizer  |    3.4.2    |          [MIT](https://opensource.org/license/MIT)          |             Detects character encoding              |
+|         h3          |    4.2.2    |  [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)  | Required by timezonefinder for geo-spatial indexing |
+|        idna         |    3.10     | [BSD-3-Clause](https://opensource.org/license/BSD-3-Clause) |         Supports international domain names         |
+|        numpy        |    2.2.6    | [BSD-3-Clause](https://opensource.org/license/BSD-3-Clause) | Required by timezonefinder for numerical operations |
+|      pycparser      |    2.22     | [BSD-3-Clause](https://opensource.org/license/BSD-3-Clause) |                    Parses C code                    |
+|    python-dotenv    |    1.0.0    | [BSD-3-Clause](https://opensource.org/license/BSD-3-Clause) |            Manages environment variables            |
+|        pytz         |   2023.3    |          [MIT](https://opensource.org/license/MIT)          |                Timezone conversions                 |
+|      requests       |   2.31.0    |  [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)  |          Handles HTTP requests to the API           |
+|   timezonefinder    |    6.5.9    |          [MIT](https://opensource.org/license/MIT)          |         Detects timezones with coordinates          |
+|       urllib3       |    2.4.0    |          [MIT](https://opensource.org/license/MIT)          |                    Handles URL's                    |
+
+## Legal and Ethical Requirements
+
+- All libraries and packages are used in accordance with their respective license requirements, which can be found hyperlinked in the table above.
+- Use of the OpenWeatherMap API is in accordance with its [terms and conditions](https://openweather.co.uk/storage/app/media/Terms/Openweather_terms_and_conditions_of_sale.pdf)
+- API usage is limited to 60 requests per minute
+- CSV and JSON files created by the app are only stored locally in the root folder
+
+## Security Impacts
+
+| **Package/Library** |        **Potential Risks**         |                                            **Mitigation Used**                                            |
+| :-----------------: | :--------------------------------: | :-------------------------------------------------------------------------------------------------------: |
+|      Requests       |  API hijacking, data interception  |                                 Uses HTTPS with certificate verification                                  |
+|        Numpy        | Numeric processing vulnerabilities |                                     Only used through timezonefinder                                      |
+|       Urllib3       |       HTTP header injection        | Patched in current version (2.4+), used through requests, code to reject special characters as city names |
