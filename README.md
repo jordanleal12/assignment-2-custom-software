@@ -6,7 +6,9 @@ This is a python command line application that gives you current weather data fo
 
 The application will output current temperature, humidity, weather conditions and local time of the last update.
 
-Non-capital cities also work, but functionality is only guaranteed for capital cities.
+When selecting cities with shared names, add the ISO 3166 state and country code, (e.g. "melbourne nsw au"). The state code is not always needed unless city name exists more than once in the same country.
+
+Words can be separated with commas or spaces
 
 Users can choose to output the weather report to the terminal, CSV or JSON!
 
@@ -29,7 +31,7 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
 ## Installation
 
 - [Linux/WSL/Mac](#linuxwslmac)
-- [Windows](#windows)
+- [Windows CMD](#windows)
 
 ### Linux/WSL/Mac
 
@@ -65,9 +67,10 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
 
    - Visit [OpenWeatherMap](https://home.openweathermap.org/users/sign_up) sign up page and create account
    - Copy API key from [API keys](https://home.openweathermap.org/api_keys) page on OpenWeatherMap
-   - Create a file named .env in the project root and save your API key
+   - Create a file named .env in the project root and save your API key as `OWM_API_KEY = "api-key-here"`
    - Verify email address used with confirmation email - API KEY WILL NOT WORK IF YOU SKIP THIS STEP!!!
-   - For ease of use, the following pre-confirmed API key can be used - "0c3330fa568c970e539a75c0d5c08c40"
+   - The API key can take a few minutes to activate, for testing purposes only the following pre-confirmed API key can be used - "0c3330fa568c970e539a75c0d5c08c40"
+   - NOTE - In a normal deployment setting, the use of a pre-provided API key could constitute a security risk and is only used here to expedite the testing process.
 
    ```bash
    echo "OWM_API_KEY = \"api-key-here\"" > .env
@@ -88,6 +91,8 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
    ```
 
 ### Windows
+
+**_Use CMD not Powershell_**
 
 1. Verify version
 
@@ -121,9 +126,10 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
 
    - Visit [OpenWeatherMap](https://home.openweathermap.org/users/sign_up) sign up page and create account
    - Copy API key from [API keys](https://home.openweathermap.org/api_keys) page on OpenWeatherMap
-   - Create a file named .env in the project root and save your API key
+   - Create a file named .env in the project root and save your API key as `OWM_API_KEY = "api-key-here"`
    - Verify email address used with confirmation email - API KEY WILL NOT WORK IF YOU SKIP THIS STEP!!!
-   - For ease of use, the following pre-confirmed API key can be used - "0c3330fa568c970e539a75c0d5c08c40"
+   - The API key can take a few minutes to activate, for testing purposes only the following pre-confirmed API key can be used - "0c3330fa568c970e539a75c0d5c08c40"
+   - NOTE - In a normal deployment setting, the use of a pre-provided API key could constitute a security risk and is only used here to expedite the testing process.
 
    ```cmd
    echo OWM_API_KEY = "api-key-here" > .env
@@ -204,6 +210,7 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
 - Use of the OpenWeatherMap API is in accordance with its [terms and conditions](https://openweather.co.uk/storage/app/media/Terms/Openweather_terms_and_conditions_of_sale.pdf)
 - API usage is limited to 60 requests per minute
 - CSV and JSON files created by the app are only stored locally in the root folder
+- Pre provided API Key is for testing by CoderAcademy staff only and would not be present in normal deployment
 
 ## Security Impacts
 

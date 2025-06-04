@@ -24,9 +24,9 @@ def get_output_handler():
     Welcome to the Weather Application!
     This app fetches current weather, date and time from any Capital City in the world!
     You can choose to output to terminal, a CSV file, or a JSON file.
-    The local time is from the last update in the requested city, and updates every ~10 minutes.
-    Please note - You can choose non-capital cities, but the data may not be accurate.
-    Cities with multiple words should be separated by or spaces, or use the first word.
+    The local time is from the last weather update, given every ~10 minutes.
+    Multi-word city names can be separated by commas or spaces or use the first word only.
+    If the city shares its name, add the ISO 3166 state and country code, (e.g. "melbourne nsw au"). 
     {"_" * 50}""")
 
     while True:
