@@ -98,8 +98,8 @@ def main():
                         handler.output(weather_data)
                     else: # If no data is returned, raise an error
                         raise ValueError("No data found for the specified city.")
-                except Exception as e: # Catch any exceptions that occur during the process
-                    print(f"Error: {e}")
-
+                except ValueError as e:
+                    print(f"Value Error: {e}")
+                    
 if __name__ == "__main__":
     main() # Checks if the script is being run from main before calling

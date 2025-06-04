@@ -29,7 +29,6 @@ class WeatherService:
             response = requests.get(self.url, params=owm_queries, timeout=10)
             # Returns a HTTP error if the request was unsuccessful, returns nothing otherwise
             response.raise_for_status()
-
         # Prints relevant error message and returns empty dictionary if the request was unsuccessful
         except requests.ConnectionError:
             print("Error: Unable to connect to the OpenWeatherMap API")

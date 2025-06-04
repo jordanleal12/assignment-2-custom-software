@@ -1,5 +1,21 @@
 # CLI Weather Application - Fetch Current Weather
 
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Features](#features)
+3. [Requirements](#requirements)
+4. [Installation](#installation)
+   - [Linux/WSL/Mac](#linuxwslmac)
+   - [Windows CMD](#windows)
+5. [Using the App](#using-the-app)
+6. [Additional Information](#additional-information)
+7. [Files](files)
+8. [External Libraries\Packages](#external-librariespackages)
+9. [Legal and Ethical Requirements](#legal-and-ethical-requirements)
+10. [Security Impacts](#security-impacts)
+11. [Troubleshooting](#troubleshooting)
+
 ## Overview
 
 This is a python command line application that gives you current weather data for any capital city in the world!
@@ -149,7 +165,7 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
    deactivate
    ```
 
-## Using the Weather App
+## Using the App
 
 1. From the main menu, type:
    - '1' To output the weather report to the CLI
@@ -219,3 +235,14 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
 |      Requests       |  API hijacking, data interception  |                                 Uses HTTPS with certificate verification                                  |
 |        Numpy        | Numeric processing vulnerabilities |                                     Only used through timezonefinder                                      |
 |       Urllib3       |       HTTP header injection        | Patched in current version (2.4+), used through requests, code to reject special characters as city names |
+
+## Troubleshooting
+
+|                   **Error Message**                    |                              **Cause**                               |                                                                                                                       **Solution**                                                                                                                       |
+| :----------------------------------------------------: | :------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|          Error: Missing API key in .env file           |                  Missing or invalid format API key                   |                                                  Refer to installation instructions and check that API key is appropriately installed in .env file in root directory as `OWM_API_KEY = "api-key-here"`                                                   |
+|             HTTP Error: 401 - Unauthorized             |               API Key invalid or incorrectly formatted               | New API keys can take time to be validated. Ensure the email address for your OpenWeatherMap account is verified, and that formatting matches as described above and in API installation instructions. Refer to default API key provided if still faulty |
+|  "Error: Unable to connect to the OpenWeatherMap API"  |                      Faulty internet connection                      |                                                                                                            Ensure active internet connection                                                                                                             |
+|         Error: Request timed out (10 seconds)          |     Server overload, network issues DNS issues, Firewall issues      |                                                                  Test internet connection, test api url in browser, and if no problems in browser check firewall and security settings                                                                   |
+|             "HTTP Error: 404 - Not Found"              | User has entered an incorrect city name OR API link has broken/moved |                                                                                      Try with valid city name, test API URL in browser to see if link still active                                                                                       |
+| Value Error: Expecting value: line 1 column 1 (char 0) |              Request has failed to return weather data               |                                                                                                      Check valid city name, test API URL in browser                                                                                                      |
