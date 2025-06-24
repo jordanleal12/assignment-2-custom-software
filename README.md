@@ -20,7 +20,7 @@
 
 This is a python command line application that gives you current weather data for any capital city in the world!
 
-The application will output current temperature, humidity, weather conditions and local time of the last update.
+The application will output current temperature, humidity, weather conditions and local time of the last weather update.
 
 When selecting cities with shared names, add the ISO 3166 state and country code, (e.g. "melbourne nsw au"). The state code is not always needed unless city name exists more than once in the same country.
 
