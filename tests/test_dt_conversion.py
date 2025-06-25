@@ -1,7 +1,5 @@
-"""Test cases for the dt_conversion module. PYTHONPATH=src must be input in terminal to run this file."""
+"""Test cases for dt_conversion module. Refer to 'Testing' in Readme for instructions."""
 
-# import pytz
-# import pytest
 import dt_conversion as dtc
 
 
@@ -27,3 +25,12 @@ def test_get_timezone_invalid_coords(capsys, monkeypatch):
     captured = capsys.readouterr()
     assert "Coordinates do not correspond to a valid timezone" in captured.out
     assert tz == "UTC"
+
+def test_convert_time(monkeypatch):
+    """Test that convert_time converts unix timestamp to expected datetime given timezone."""
+    # Make get_timezone always return "UTC"
+    monkeypatch.setattr(dtc, "get_timezone", lambda coords: "UTC")
+    # 1609459200 = 2021-01-01 00:00:00 UTC
+    result = dtc.convert_time(1609459200, {"lat": 0, "lon": 0})
+    # Format is "%d-%b-%y %I:%M %p %Z", so we expect: 01-Jan-21 12:00 AM UTC
+    assert result == "01-Jan-21 12:00 AM UTC"
