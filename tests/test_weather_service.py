@@ -71,6 +71,7 @@ def test_get_weather_data_timeout(requests_mock, capsys):
     assert result == {}, "On timeout, should return empty dict"
     assert "Error: Request timed out (10 seconds)" in captured.out
 
+
 def test_get_weather_data_connection_error(requests_mock, capsys):
     """Test handling of a timeout when retrieving weather data from the API."""
 
@@ -89,3 +90,18 @@ def test_get_weather_data_connection_error(requests_mock, capsys):
     # --- Assert ---
     assert result == {}, "On timeout, should return empty dict"
     assert "Error: Unable to connect to the OpenWeatherMap API" in captured.out
+
+
+def test_get_weather_data_http_error(requests_mock, capsys):
+    """Test handling of HTTP error when retrieving weather data from the API."""
+
+    requests_mock.get(
+        "https://api.openweathermap.org/data/2.5/weather",
+        status_code=404,
+        reason="Not Found"
+    )
+    ws = WeatherService(api_key="DUMMY_KEY")
+    result = ws.get_weather_data("TestCity")
+    captured = capsys.readouterr()
+    assert result == {}
+    assert "HTTP Error: 404 - Not Found" in captured.out
