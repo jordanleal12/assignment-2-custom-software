@@ -15,6 +15,7 @@
 9. [Legal and Ethical Requirements](#legal-and-ethical-requirements)
 10. [Security Impacts](#security-impacts)
 11. [Troubleshooting](#troubleshooting)
+12. [Testing](#testing)
 
 ## Overview
 
@@ -246,3 +247,15 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
 |         Error: Request timed out (10 seconds)          |     Server overload, network issues DNS issues, Firewall issues      |                                                                  Test internet connection, test api url in browser, and if no problems in browser check firewall and security settings                                                                   |
 |             "HTTP Error: 404 - Not Found"              | User has entered an incorrect city name OR API link has broken/moved |                                                                                      Try with valid city name, test API URL in browser to see if link still active                                                                                       |
 | Value Error: Expecting value: line 1 column 1 (char 0) |              Request has failed to return weather data               |                                                                                                      Check valid city name, test API URL in browser                                                                                                      |
+
+## Testing
+
+### 1. Pytest
+
+From the activated virtual environment, run the following command:
+
+```bash
+PYTHONPATH=src pytest
+```
+
+Depreciation warning for `datetime.datetime.utcfromtimestamp()` is already known and accounted for.
