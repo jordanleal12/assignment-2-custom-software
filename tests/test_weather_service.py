@@ -120,3 +120,28 @@ def test_get_weather_data_generic_exception(monkeypatch, capsys):
     captured = capsys.readouterr()
     assert result == {}
     assert "Network Error: test error" in captured.out
+
+
+def test_get_weather_data_key_error(requests_mock, capsys, monkeypatch):
+    """Test handling of KeyError when retrieving weather data from the API."""
+
+    # Return JSON with missing expected fields
+    broken_json = {
+        "name": "City",
+        "main": {},  # missing 'temp'
+        "weather": [],  # missing [0]['description']
+        "dt": 123456789,
+        "coord": {"lat": 0, "lon": 0}
+    }
+
+    requests_mock.get(
+        "https://api.openweathermap.org/data/2.5/weather",
+        json=broken_json,
+        status_code=200
+    )
+
+    ws = WeatherService(api_key="KEY")
+    result = ws.get_weather_data("City")
+    captured = capsys.readouterr()
+    assert result == {}
+    assert "Data Error: Missing expected field" in captured.out
