@@ -53,3 +53,30 @@ def test_cli_happy_path(monkeypatch, capsys):
     # Grab what was printed and verify our DummyHandler ran
     out = capsys.readouterr().out
     assert "OUTPUT: {'city': 'testcity', 'temperature': 20, 'humidity': 50" in out
+
+def test_cli_no_data_error(monkeypatch, capsys):
+    """Test the main() function in main.py when no data is returned for a city."""
+
+    # Provide the API key so main() doesn’t exit early
+    monkeypatch.setenv("OWM_API_KEY", "DUMMY")
+
+    # Stub WeatherService.get_weather_data() to return {} (no data)
+    monkeypatch.setattr(
+        WeatherService, "get_weather_data",
+        lambda self, city: {}
+    )
+
+    # Patch main.TerminalOutput so get_output_handler() uses DummyHandler
+    monkeypatch.setattr(main, "TerminalOutput", DummyHandler)
+
+    # Simulate user input: choose Terminal (1), enter BadCity, then exit
+    driver = InputDriver(["1", "BadCity", "exit"])
+    monkeypatch.setattr(builtins, "input", driver)
+
+    # Run main.main() and catch the SystemExit from exit()
+    with pytest.raises(SystemExit):
+        main.main()
+
+    # Capture printed output and assert the ValueError message shows
+    out = capsys.readouterr().out
+    assert "Value Error: No data found for the specified city." in out
