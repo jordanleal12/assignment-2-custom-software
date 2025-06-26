@@ -1,0 +1,51 @@
+import pytest
+import requests
+import requests_mock
+from weather_service import WeatherService
+import dt_conversion
+
+def test_get_weather_data_success(requests_mock, monkeypatch):
+    # --- Arrange ---
+    # 1a) Prepare a fake JSON payload
+    fake_json = {
+   "coord": {
+      "lon": 0,
+      "lat": 0
+   },
+   "weather": [
+      {
+         "main": "Rain",
+         "description": "clear sky",
+      }
+   ],
+   "main": {
+      "temp": 22.5,
+      "humidity": 55,
+   },
+   "dt": 1609459200,
+   "name": "TestCity",
+   "cod": 200
+}
+    # 1b) Stub out dt_conversion.convert_time so we don't test datetime
+    monkeypatch.setattr(dt_conversion, "convert_time",
+                        lambda unix_dt, coords: "01-Jan-21 12:00 AM UTC")
+    # 1c) Intercept the GET request, regardless of params, return our fake JSON
+    requests_mock.get(
+        "https://api.openweathermap.org/data/2.5/weather",
+        json=fake_json,
+        status_code=200
+    )
+
+    # --- Act ---
+    ws = WeatherService(api_key="DUMMY_KEY")
+    result = ws.get_weather_data("TestCity")
+
+    # --- Assert ---
+    assert result["city"] == "TestCity"
+    assert result["temperature"] == 22.5
+    assert result["humidity"] == 55
+    assert result["condition"] == "clear sky"
+    assert (
+        result["local_time"] == "01-Jan-21 12:00 AM UTC" or
+        result["local_time"] == "01-Jan-21 12:00 AM GMT"
+    )
