@@ -1,12 +1,13 @@
-import pytest
+"""Tests weather_service.py module using pytest and requests-mock."""
+
 import requests
-import requests_mock
 from weather_service import WeatherService
 import dt_conversion
 
 def test_get_weather_data_success(requests_mock, monkeypatch):
-    # --- Arrange ---
-    # 1a) Prepare a fake JSON payload
+    """Test successful retrieval of weather data from the API."""
+
+    #Prepare a fake JSON payload
     fake_json = {
    "coord": {
       "lon": 0,
@@ -26,10 +27,10 @@ def test_get_weather_data_success(requests_mock, monkeypatch):
    "name": "TestCity",
    "cod": 200
 }
-    # 1b) Stub out dt_conversion.convert_time so we don't test datetime
+    # Stub out dt_conversion.convert_time so we don't test datetime
     monkeypatch.setattr(dt_conversion, "convert_time",
                         lambda unix_dt, coords: "01-Jan-21 12:00 AM UTC")
-    # 1c) Intercept the GET request, regardless of params, return our fake JSON
+    # Intercept the GET request, regardless of params, return our fake JSON
     requests_mock.get(
         "https://api.openweathermap.org/data/2.5/weather",
         json=fake_json,
@@ -49,3 +50,23 @@ def test_get_weather_data_success(requests_mock, monkeypatch):
         result["local_time"] == "01-Jan-21 12:00 AM UTC" or
         result["local_time"] == "01-Jan-21 12:00 AM GMT"
     )
+
+
+def test_get_weather_data_timeout(requests_mock, capsys):
+    """Test handling of a timeout when retrieving weather data from the API."""
+
+    # Simulate a timeout when requests.get is called
+    requests_mock.get(
+        "https://api.openweathermap.org/data/2.5/weather",
+        exc=requests.exceptions.Timeout
+    )
+
+    ws = WeatherService(api_key="DUMMY_KEY")
+    result = ws.get_weather_data("TestCity")
+
+    # Capture printed output
+    captured = capsys.readouterr()
+
+    # --- Assert ---
+    assert result == {}, "On timeout, should return empty dict"
+    assert "Error: Request timed out (10 seconds)" in captured.out
