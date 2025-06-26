@@ -30,6 +30,15 @@ class WeatherService:
             # Returns a HTTP error if the request was unsuccessful, returns nothing otherwise
             response.raise_for_status()
         # Prints relevant error message and returns empty dictionary if the request was unsuccessful
+            data = response.json() # Assign response data to a variable
+            # Return dictionary from json variable
+            return {
+                "city": data["name"],  # City name
+                "temperature": data["main"]["temp"],  # Temperature in Celsius
+                "humidity": data["main"]["humidity"],  # Humidity percentage
+                "condition": data["weather"][0]["description"],  # Weather description
+                "local_time": convert_time(data["dt"], data["coord"])  # Local time of last update
+            }
         except requests.ConnectionError:
             print("Error: Unable to connect to the OpenWeatherMap API")
             return {}
@@ -45,15 +54,3 @@ class WeatherService:
         except KeyError as e:
             print(f"Data Error: Missing expected field {e}")
             return {}
-
-        if response:  # Check if response is not None before accessing it
-            data = response.json() # Assign response data to a variable
-            # Return dictionary from json variable
-            return {
-                "city": data["name"],  # City name
-                "temperature": data["main"]["temp"],  # Temperature in Celsius
-                "humidity": data["main"]["humidity"],  # Humidity percentage
-                "condition": data["weather"][0]["description"],  # Weather description
-                "local_time": convert_time(data["dt"], data["coord"])  # Local time of last update
-            }
-        return {}  # Return an empty dictionary if response is None
