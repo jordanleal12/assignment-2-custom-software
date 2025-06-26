@@ -105,3 +105,18 @@ def test_get_weather_data_http_error(requests_mock, capsys):
     captured = capsys.readouterr()
     assert result == {}
     assert "HTTP Error: 404 - Not Found" in captured.out
+
+
+def test_get_weather_data_generic_exception(monkeypatch, capsys):
+    """Test handling of an unexpected request exception when retrieving weather data."""
+
+    # Patch requests.get to raise a raw RequestException (not HTTPError, Timeout, etc.)
+    def raise_req_exception(*args, **kwargs):
+        raise requests.RequestException("test error")
+    monkeypatch.setattr(requests, "get", raise_req_exception)
+
+    ws = WeatherService(api_key="KEY")
+    result = ws.get_weather_data("City")
+    captured = capsys.readouterr()
+    assert result == {}
+    assert "Network Error: test error" in captured.out
