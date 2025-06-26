@@ -250,12 +250,26 @@ Users can choose to output the weather report to the terminal, CSV or JSON!
 
 ## Testing
 
-### 1. Pytest
+### 1. Unit Testing
 
+For testing of correct function output for the `dt_conversion.py` module using Pytest.
 From the activated virtual environment, run the following command:
 
 ```bash
-PYTHONPATH=src pytest
+PYTHONPATH=src pytest tests/test_dt_conversion.py
 ```
 
+If greater detail required from test results, add `--tb=long -vv` after pytest.
+
 Depreciation warning for `datetime.datetime.utcfromtimestamp()` is already known and accounted for.
+
+### 2. Integration Testing
+
+For testing of correct API/HTTP error handling of `weather_service.py`, without calling external API, using the requests-mock library and Pytest.
+From the activated virtual environment, run the following command:
+
+```bash
+PYTHONPATH=src pytest tests/test_weather_service.py
+```
+
+If greater detail required from test results, add `--tb=long -vv` after pytest.
