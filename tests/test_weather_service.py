@@ -27,9 +27,7 @@ def test_get_weather_data_success(requests_mock, monkeypatch):
    "name": "TestCity",
    "cod": 200
 }
-    # Stub out dt_conversion.convert_time so we don't test datetime
-    monkeypatch.setattr(dt_conversion, "convert_time",
-                        lambda unix_dt, coords: "01-Jan-21 12:00 AM UTC")
+
     # Intercept the GET request, regardless of params, return our fake JSON
     requests_mock.get(
         "https://api.openweathermap.org/data/2.5/weather",
