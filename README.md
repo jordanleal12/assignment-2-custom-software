@@ -274,7 +274,6 @@ PYTHONPATH=src pytest tests/test_weather_service.py
 
 If greater detail required from test results, add `--tb=long -vv` after pytest.
 
-
 ### 3. CLI Integration Testing
 
 For testing user interaction with the CLI, ensuring that the app responds as expexted to various inputs, and that it outputs as expected given certain inputs.
