@@ -7,7 +7,7 @@ from weather_service import WeatherService
 
 class DummyHandler:
     """A simple dummy output handler to simulate terminal output."""
-    
+
     def output(self, data):
         """Simulate outputting data to the terminal."""
         print(f"OUTPUT: {data}")
