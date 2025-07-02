@@ -1,82 +1,96 @@
-"""Test the main() function in main.py, which is the CLI entry point."""
+"""Smoke tests for main CLI application, the entry point for the application."""
 
-import builtins
-import pytest
-import main
-from weather_service import WeatherService
+import builtins # Used to mock user input
+import pytest # Used for testing
+import main # Main application module
+from weather_service import WeatherService # Weather service module
 
-class DummyHandler:
-    """A simple dummy output handler to simulate terminal output."""
+class FakeOutputHandler:
+    """Simulates terminal output for testing"""
 
     def output(self, data):
-        """Simulate outputting data to the terminal."""
-        print(f"OUTPUT: {data}")
+        """Provides a fake output for pytest instead of printing to terminal"""
 
+        print(f"OUTPUT: {data}") # This will be captured by pytest
 
-class InputDriver:
-    """A class to simulate user input for testing purposes."""
+class FakeInputWriter:
+    """Simulates user input sequence for testing"""
 
-    def __init__(self, responses):
-        self._iter = iter(responses)
+    def __init__(self, inputs):
+        """Constructs an instance with a list of inputs to be iterated over"""
+
+        # Convert list to iterator, giving us next item from list each time it's called
+        self.inputs = iter(inputs)
 
     def __call__(self, prompt=""):
-        return next(self._iter)
+        """Returns next input in sequence by making the object callable like a function"""
 
-def test_cli_happy_path(monkeypatch, capsys):
-    """Test the main() function in main.py with a happy path scenario."""
+        # Use next() to get the next input from the iterator above
+        return next(self.inputs)
 
-    monkeypatch.setenv("OWM_API_KEY", "DUMMY")
+def setup_test_env(monkeypatch, weather_data_func, inputs):
+    """Sets up the test environment by faking api key, weather service response, and user input"""
 
-    # Stub out the network call so we always get a valid dict
-    monkeypatch.setattr(
-        WeatherService, "get_weather_data",
-        lambda self, city: {
+    # Sets the environment variable with fake API key for pytest
+    monkeypatch.setenv("OWM_API_KEY", "TEST_KEY")
+
+    # Replace weather service response with a mock function that returns predefined data
+    monkeypatch.setattr(WeatherService, "get_weather_data", weather_data_func)
+
+    # Use replace real output handler with a fake one for testing
+    monkeypatch.setattr(main, "TerminalOutput", FakeOutputHandler)
+
+    # Simulate user inputs by replacing built-in input function with our fake input writer
+    monkeypatch.setattr(builtins, "input", FakeInputWriter(inputs))
+
+def test_successful_weather_fetch(monkeypatch, capsys):
+    """Tests weather data is fetched correctly with valid city input, captures output with capsys"""
+
+    # Setup mock weather data
+    def fake_weather_data(self, city):
+        """Returns fake weather data for testing purposes without making actual API calls"""
+
+        return {
             "city": city,
             "temperature": 20,
             "humidity": 50,
             "condition": "sunny",
             "local_time": "01-Jan-21 12:00 AM UTC"
         }
-    )
 
-    # Patch the class imported in main.py
-    monkeypatch.setattr(main, "TerminalOutput", DummyHandler)
+    # Configure test environment with fake weather data and user inputs
+    setup_test_env(monkeypatch, fake_weather_data, ["1", "TestCity", "exit"])
 
-    # Simulate typing: [menu choice, city name, exit]
-    responses = ["1", "TestCity", "exit"]
-    monkeypatch.setattr(builtins, "input", InputDriver(responses))
-
-    # Run main(); it'll call exit() on "exit", so catch the SystemExit
+    # Execute main function using with pytest.raises to verify SystemExit is raised on "exit"
     with pytest.raises(SystemExit):
         main.main()
+    output = capsys.readouterr().out # Capture the output printed to terminal
 
-    # Grab what was printed and verify our DummyHandler ran
-    out = capsys.readouterr().out
-    assert "OUTPUT: {'city': 'testcity', 'temperature': 20, 'humidity': 50" in out
+    # Assert output matches expected values
+    assert "OUTPUT: {'city': 'testcity'" in output
+    assert "'temperature': 20" in output
+    assert "'humidity': 50" in output
+    assert "'condition': 'sunny'" in output
+    assert "'local_time': '01-Jan-21 12:00 AM UTC'" in output
 
-def test_cli_no_data_error(monkeypatch, capsys):
-    """Test the main() function in main.py when no data is returned for a city."""
+def test_invalid_city_handling(monkeypatch, capsys):
+    """Tests error handling for non-existent city"""
 
-    # Provide the API key so main() doesn’t exit early
-    monkeypatch.setenv("OWM_API_KEY", "DUMMY")
+    # Setup fake API call to return empty data
+    def fake_weather_data(self, city):
+        return {}
 
-    # Stub WeatherService.get_weather_data() to return {} (no data)
-    monkeypatch.setattr(
-        WeatherService, "get_weather_data",
-        lambda self, city: {}
+    # Configure test environment with fake weather data and user inputs
+    setup_test_env(
+        monkeypatch,
+        fake_weather_data,
+        ["1", "InvalidCity", "exit"]
     )
 
-    # Patch main.TerminalOutput so get_output_handler() uses DummyHandler
-    monkeypatch.setattr(main, "TerminalOutput", DummyHandler)
-
-    # Simulate user input: choose Terminal (1), enter BadCity, then exit
-    driver = InputDriver(["1", "BadCity", "exit"])
-    monkeypatch.setattr(builtins, "input", driver)
-
-    # Run main.main() and catch the SystemExit from exit()
+    # Execute main function using with pytest.raises to verify SystemExit is raised on "exit"
     with pytest.raises(SystemExit):
         main.main()
+    output = capsys.readouterr().out
 
-    # Capture printed output and assert the ValueError message shows
-    out = capsys.readouterr().out
-    assert "Value Error: No data found for the specified city." in out
+    # Assert output contains expected error message for no data found
+    assert "Value Error: No data found for the specified city." in output
